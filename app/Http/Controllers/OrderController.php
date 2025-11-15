@@ -31,13 +31,12 @@ class OrderController extends Controller
 
         try {
             $order = $this->orderService->createOrder( $paymentMethod);
-
             if ($paymentMethod === 'visa') {
                 return redirect()->route('checkout.show', ['order' => $order->id])
                     ->with('success', 'Order created — please complete payment.');
             }
 
-            return redirect()->route('orders.index', $order)->with('success', 'Order placed (cash).');
+            return redirect()->route('orders.show', $order)->with('success', 'Order placed.');
         } catch (\Throwable $e) {
             // Log error in production
             return back()->with('error', $e->getMessage());

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->bigInteger('amount')->default(0);
-            $table->string('payment_method')->default('cash');
+            $table->string('payment_method');
             $table->string('currency', 3)->default(config('services.stripe.currency', 'EGP'));
             $table->string('payment_intent_id')->nullable()->index();
             $table->string('client_secret')->nullable();

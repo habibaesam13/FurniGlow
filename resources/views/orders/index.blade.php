@@ -21,7 +21,6 @@
             <h4 class="mt-4 p-2 d-flex justify-content-between align-items-center">{{ $month }} <small class="text-muted">{{ $orders->count() }} Orders</small></h4>
             @foreach($orders as $order)
                 @php $items = json_decode($order->items, true); @endphp
-                
                 <div class="card mb-3 shadow-sm w-75 position-relative">
                     <!-- Move the stretched link inside card-body -->
                     <div class="card-body">
@@ -50,7 +49,7 @@
                             <span><strong>{{ number_format($order->amount, 2) }}</strong> EGP</span>
                         </div>
                     </div>
-
+                    @if($order->status == 'pending')
                     <form action="{{ route('orders.destroy', $order) }}" method="POST"
                           class="position-absolute top-0 end-0 m-2"
                           style="z-index: 10;">
@@ -62,6 +61,7 @@
                             <i class="fa-solid fa-trash" style="font-size: 1rem;"></i>
                         </button>
                     </form>
+                    @endif
                 </div>
             @endforeach
         @endforeach

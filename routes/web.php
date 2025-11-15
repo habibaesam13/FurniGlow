@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\CheckoutContoller;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\CategoryController;
@@ -66,11 +65,12 @@ Route::middleware(['auth', 'single.session'])->group(function () {
     Route::put('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
-    // Checkout page for stripe payment (see below)
-    Route::get('/checkout/{order}', [CheckoutController::class, 'show'])->name('checkout.show');
+    // Checkout page for stripe payment 
     Route::get('/checkout/success', function () {
         return view('checkout.success');
     })->name('checkout.success');
+    Route::post('/checkout/confirm-order/{order}', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
+    Route::get('/checkout/{order}', [CheckoutController::class, 'show'])->name('checkout.show');
     Route::post('/stripe/webhook', [WebhookController::class, 'handle'])->name('stripe.webhook');
 });
 

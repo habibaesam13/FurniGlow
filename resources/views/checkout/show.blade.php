@@ -14,22 +14,39 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     const stripe = Stripe("{{ config('services.stripe.key') }}");
+
     const elements = stripe.elements();
     const card = elements.create("card");
     card.mount("#card-element");
 
-    const form = document.getElementById("payment-form");
-    form.addEventListener("submit", async (e) => {
+    document.getElementById("payment-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        const {paymentIntent, error} = await stripe.confirmCardPayment("{{ $clientSecret }}", {
-            payment_method: { card: card }
-        });
-
+        const {
+            paymentIntent,
+            error
+        } = await stripe.confirmCardPayment(
+            "{{ $clientSecret }}", {
+                payment_method: {
+                    card: card
+                }
+            }
+        );
         if (error) {
             alert(error.message);
         } else if (paymentIntent.status === "succeeded") {
+            // Call backend to update order status
+            await fetch("{{ route('checkout.confirm', $order->id) }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+            });
+
+            // Redirect to success page
             window.location.href = "{{ route('checkout.success') }}";
         }
     });
 </script>
+
 @endsection

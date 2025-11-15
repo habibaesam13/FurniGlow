@@ -43,6 +43,9 @@
             @endforeach
         </div>
         <a href="{{ route('orders.index') }}" class="btn btn-dark w-25 rounded-pill py-2 mt-4 ">Back to Orders History</a>
+        @if($order->status == "pending")
+        <a href="{{ route('checkout.show',$order) }}"  class="btn btn-dark w-25 rounded-pill py-2 mt-4 ">Checkout</a>
+        @endif
     </div>
 </div>
 </div>
